@@ -91,7 +91,7 @@ def buy():
         price=lookup(symbol)['price']
         # cash = db.execute("SELECT cash FROM users WHERE id = :user",user=session["user_id"])[0]['cash']
         # TODO: check for cash
-        cash = select("SELECT cash FROM users WHERE id = ?",(session["user_id"],))[0][3]
+        cash = select("SELECT cash FROM users WHERE id = ?",(session["user_id"],))[0][0]
         cash_after = cash - price * float(amount)
 
         # Check if current cash is enough for transaction
@@ -109,7 +109,7 @@ def buy():
 
         # update row into the stock table
         else:
-            amount += stock[0][3] # amount
+            amount += stock[0][0] # amount
 
             # db.execute("UPDATE stocks SET amount = :amount WHERE user_id = :user AND symbol = :symbol",user=session["user_id"], symbol=symbol, amount=amount)
             query("UPDATE stocks SET amount = ? WHERE user_id = ? AND symbol = ?",(amount, session["user_id"], symbol))
@@ -299,7 +299,7 @@ def sell():
 
         # calculate and update user's cash
         # cash = db.execute("SELECT cash FROM users WHERE id = :user", user=session["user_id"])[0]['cash']
-        cash = select("SELECT cash FROM users WHERE id = ?", (session["user_id"],))[0][3]
+        cash = select("SELECT cash FROM users WHERE id = ?", (session["user_id"],))[0][0]
         cash_after = cash + price * float(amount)
 
         # db.execute("UPDATE users SET cash = :cash WHERE id = :user", cash=cash_after, user=session["user_id"])
