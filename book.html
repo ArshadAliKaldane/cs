@@ -1,0 +1,64 @@
+{% extends "layout.html" %}
+
+{% block title %}Book{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="d-flex mb-3">
+            <div class="text-center m-auto">
+                <h1 class="text-primary">{{ book["title"] }}</h1>
+                <h3 class="text-info">By {{ book["author"] }}</h3>
+                <h5 class="text-warning">Published in {{ book["year"] }}</h5>
+                <p><strong>isbn: </strong><a href=" {{ url_for('api', book_isbn=book['isbn']) }} ">{{ book["isbn"] }}</a></p>
+            </div>
+        <!-- 
+            <div class="card text-center">
+                <div class="card-body">
+                  <h5 class="card-title">Special title treatment</h5>
+                  <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                  <a href="#" class="btn btn-primary">Go somewhere</a>
+                </div>
+            </div> 
+        -->
+            
+            <form action="{{ url_for('review', book_isbn=book['isbn']) }}" method="POST" class="m-auto">
+                <div class="form-group">
+                    Rate me (1-5)
+                    <input type="range" name="rating" class="custom-range" min="1" max="5" step="0.1">
+                    <input type="text" name="message" class="form-control" placeholder="write your review here...">
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Submit Review" class="form-control btn btn-outline-primary">
+                </div>
+            </form>
+        </div>
+
+        <!-- <div class="mb-3 text-center">
+            <small>This book has got a rating of <strong class="text-success">{{ rating }} / 5</strong> with <strong class="text-info">{{ count }}</strong> different reviews.</small>
+        </div> -->
+        
+        {% if reviews %}
+            <table class="table table-bordered table-hover w-75 text-center m-auto">
+                <tr class="bg-secondary">
+                    <th>user</th>
+                    <th>rating</th>
+                    <th>review</th>
+                    <th>date & time</th>
+                </tr>
+                {% for rev in reviews %}
+                    <tr>
+                        <td>{{ rev["name"] }}</td>
+                        <td>{{ rev["rating"] }}</td>
+                        <td>{{ rev["message"] }}</td>
+                        <td>{{ rev["date"] }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% else %}
+            <div class="text-center">
+                <h3><span class="text-danger">no reviews yet.</span> be the first person to review this book.</h3>
+            </div>
+        {% endif %}
+        
+    </div>
+{% endblock %}
